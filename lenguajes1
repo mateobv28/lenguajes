@@ -1,0 +1,352 @@
+#include <stdio.h>
+#include <iostream>
+#include <conio.h>
+#include <windows.h>
+#include <string>
+#include <iomanip>
+#include <stdlib.h>
+
+
+using namespace std;
+
+class Producto{
+public:
+struct producto{
+    string nombre_producto, tipo_producto;
+    float precio_producto;
+    float codigo_producto;
+    int cantidad_producto;
+    struct producto * sgte;
+}
+
+struct producto *ant, *temp;
+struct producto *pi, *pa, *pf;
+
+void insertar_lista(string nombre_producto, float precio_producto, float codigo_producto, int cantidad_producto, string tipo_producto){
+    if(pi == NULL){
+        pi = new producto;
+        pi -> nombre_producto = nombre_producto;
+        pi -> precio_producto = precio_producto;
+        pi -> codigo_producto = codigo_producto;
+        pi -> cantidad_producto = cantidad_producto;
+        pi -> tipo_producto = tipo_producto;
+        pf = pi;
+    } else {
+        pa = new producto;
+        pf -> sgte = pa;
+        pa -> nombre_producto = nombre_producto;
+        pa -> precio_producto = precio_producto;
+        pa -> codigo_producto = codigo_producto;
+        pa -> cantidad_producto = cantidad_producto;
+        pa -> tipo_producto = tipo_producto;
+        pf = pa;
+    }
+    pf -> sgte = NULL;
+}
+};
+
+
+
+void mostrar_productos(){
+    Producto prod;
+    prod.pa = prod.pi;
+    int i = 1;
+    while(prod.pa != NULL){
+        cout << "Producto #" << i << ":" << endl;
+        cout << "Codigo: " << prod.pa -> codigo_producto << endl;
+        cout << "Nombre: " << prod.pa -> nombre_producto << endl;
+        cout << "Precio: " << prod.pa -> precio_producto << endl;
+        cout << "Cantidad: " << prod.pa -> cantidad_producto << endl;
+        cout << "Tipo: " << prod.pa -> tipo_producto << endl;
+        cout << "------------------------" << endl;
+
+        prod.pa = prod.pa -> sgte;
+        i++;
+        }
+}
+
+void modificar_producto() {
+    Producto prod;
+    float codigo_buscar;
+    bool encontrado = false;
+
+    cout << "Ingrese el codigo del producto a modificar: ";
+    cin >> codigo_buscar;
+    prod.pa = prod.pi;
+    while (prod.pa != NULL) {
+        if (prod.pa->codigo_producto == codigo_buscar) {
+            encontrado = true;
+            break;
+        }
+        prod.pa = prod.pa->sgte;
+    }
+
+    if (encontrado) {
+        cout << "Ingrese el nuevo nombre del producto: ";
+        cin >> prod.pa -> nombre_producto;
+
+        cout << "Ingrese el nuevo precio del producto: ";
+        cin >> prod.pa -> precio_producto;
+
+        cout << "Ingrese la nueva cantidad de productos: ";
+        cin >> prod.pa -> cantidad_producto;
+
+        cout << "Ingrese el nuevo tipo de producto: ";
+        cin >> prod.pa -> tipo_producto;
+        cout << "Producto modificado exitosamente." << endl;
+    } else {
+        cout << "Producto no encontrado." << endl;
+    }
+}
+
+
+void eliminar_producto() {
+    Producto prod;
+    prod.pa = prod.pi;
+    float codigo_buscar;
+    bool encontrado = false;
+    prod.ant = NULL;
+    prod.temp = NULL;
+
+    cout << "Ingrese el codigo del producto a eliminar: ";
+    cin >> codigo_buscar;
+
+    while(prod.pa != NULL){
+        if(prod.pa -> codigo_producto == codigo_buscar){
+            encontrado = true;
+            break;
+        }
+        prod.ant = prod.pa;
+        prod.pa = prod.pa -> sgte;
+    }
+
+    if(encontrado){
+        prod.temp = prod.pa;
+        if(prod.ant != NULL) {
+            prod.ant -> sgte = prod.pa -> sgte;
+        } else {
+            prod.pi = prod.pa -> sgte;
+        }
+        delete prod.temp;
+        cout << "Producto eliminado exitosamente." << endl;
+    } else {
+        cout << "Producto no encontrado." << endl;
+    }
+
+    prod.pa = prod.pi; 
+    mostrar_productos();
+}
+
+void agregar_producto() {
+        string nombre_producto, tipo_producto;
+        float precio_producto, codigo_producto;
+        int cantidad_producto;
+        Producto prod;
+
+        do {
+            cout << "Ingrese el nombre del producto: ";
+            cin >> nombre_producto;
+
+            cout << "Ingrese el precio del producto: ";
+            cin >> precio_producto;
+
+            cout << "Ingrese el codigo del producto: ";
+            cin >> codigo_producto;
+
+            cout << "Ingrese la cantidad de productos: ";
+            cin >> cantidad_producto;
+
+            cout << "Ingrese tipo de producto: deporte o tecnologia:";
+            cin >> tipo_producto;
+
+            prod.insertar_lista(nombre_producto, precio_producto, codigo_producto, cantidad_producto,tipo_producto);
+
+            cout << "Producto agregado exitosamente." << endl;
+
+            cout << "Desea agregar otro producto? (s/n): " << endl;
+            char respuesta;
+            cin >> respuesta;
+
+            if (respuesta == 'n' || respuesta == 'N') {
+                break;
+            }
+        } while (true);
+    }
+
+
+
+
+
+void comprar_producto(){
+      Producto prod;
+    prod.pa = prod.pi;
+    int opcion;
+    float codigo;
+    int producto;
+    
+    cout << "-------- COMPRAR PRODUCTOS --------" << endl;
+
+    bool hay_deporte = false;
+    bool hay_tecnologia = false;
+    while(prod.pa != NULL){
+        if(prod.pa->tipo_producto == "deporte"){
+            if(!hay_deporte){
+                cout << "-------- PRODUCTOS DEPORTE --------" << endl;
+                hay_deporte = true;
+            }
+            cout << "Codigo: " << prod.pa -> codigo_producto << endl;
+            cout << "Nombre: " << prod.pa -> nombre_producto << endl;
+            cout << "Precio: " << prod.pa -> precio_producto << endl;
+            cout << "Cantidad: " << prod.pa -> cantidad_producto << endl;
+            cout << "------------------------" << endl;
+
+        } else if(prod.pa->tipo_producto == "tecnologia"){
+            if(!hay_tecnologia){
+                cout << "------ PRODUCTOS TECNOLOGIA -------" << endl;
+                hay_tecnologia = true;
+            }
+            cout << "Codigo: " << prod.pa -> codigo_producto << endl;
+            cout << "Nombre: " << prod.pa -> nombre_producto << endl;
+            cout << "Precio: " << prod.pa -> precio_producto << endl;
+            cout << "Cantidad: " << prod.pa -> cantidad_producto << endl;
+            cout << "------------------------" << endl;
+        }
+        prod.pa = prod.pa -> sgte;
+    }
+
+    
+    if(!hay_deporte){
+        cout << "Aun no se han agregado articulos de tipo deporte" << endl;
+    }
+    if(!hay_tecnologia){
+        cout << "Aun no se han agregado articulos de tipo tecnologia" << endl;
+    }
+
+    cout << "Dijite el codigo del producto que desea comprar:" << endl;
+    cin >> codigo;
+    while(prod.pi != NULL){
+            if(prod.pa -> codigo_producto == codigo){
+            cout << "Producto seleccionado: " << prod.pa -> nombre_producto << endl;
+            }
+        prod.pa = prod.pa -> sgte;
+    }
+    
+    if(prod.pa == NULL){
+        cout << "Producto no encontrado. Intente nuevamente." << endl;
+        comprar_producto();
+    } else {
+
+        cout << "Producto(s) agregado(s) al carrito correctamente." << endl;
+        
+    }
+}
+
+void pagar_producto(){
+    cout<< "aun no";
+}
+
+
+
+
+class menu{
+    
+    public:
+    
+    void menu_principal(){
+   
+    char opcion;
+    do{
+        system("cls");
+        cout << "------- EAFITZON -------" << endl;
+        cout << "1. coordinador" << endl;
+        cout << "2. usuario" << endl;
+        cout << "Elija una opcion:" << endl;
+        cin>> opcion;
+        switch(opcion){
+        case '1':
+            menu_coordinador();
+            break;
+        case '2':
+            menu_usuario();
+            break;
+        default:
+            cout<<"Opcion invalida intente nuevamente";
+            menu_principal();
+
+        }
+        system("pause");
+    } while (opcion != '3');
+}
+
+void menu_coordinador(){
+    
+    char opcion;
+    do{
+        system("cls");
+        cout << "------- MENU COORDINADOR -------" << endl;
+        cout << "1. Agregar Articulo" << endl;
+        cout << "2. Modificar Articulo" << endl;
+        cout << "3. Eliminar Articulo" << endl;
+        cout << "4. Volver al Menu Principal" << endl;
+        cout << "Elija una opcion: ";
+        cin >> opcion;
+
+        switch(opcion){
+            case '1':
+                agregar_producto();
+                break;
+            case '2':
+                modificar_producto();
+                break;
+            case '3':
+                eliminar_producto();
+                break;
+            case '4':
+                menu_principal();
+                break;
+            default:
+                cout<<"Opcion invalida intente nuevamente"<<endl;
+                menu_coordinador();
+        }
+        system("pause");
+    } while(opcion != '4');
+}
+
+void menu_usuario(){
+    
+    char opcion;
+    
+    do{
+        system("cls");
+        cout << "------- MENU USUARIO -------" << endl;
+        cout << "1. Comprar Articulo" << endl;
+        cout << "2. Pagar" << endl;
+        cout << "3. Volver al Menu Principal" << endl;
+        cout << "Elija una opcion:" << endl;
+        cin>> opcion;
+        switch(opcion){
+        case '1':
+            comprar_producto();
+            break;
+        case '2':
+            pagar_producto();
+            break;
+        case '3':
+            menu_principal();
+            break;
+        default:
+            cout<<"Opcion invalida intente nuevamente";
+            menu_usuario();
+
+        }
+        system("pause");
+    } while (opcion != '3');
+ }
+};
+
+int main(){
+    menu obj;
+    obj.menu_principal();
+    return 0;
+}
+
